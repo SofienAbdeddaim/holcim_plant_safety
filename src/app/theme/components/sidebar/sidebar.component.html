@@ -1,0 +1,7 @@
+<div class="sidebar-outer">
+    <a class="logo d-flex align-items-center" routerLink="/" (click)="closeSubMenus()" *ngIf="settings.theme.sidebarIsFixed">
+        <!--<span class="start">Lafarge</span><span class="ng">Holcim</span>-->
+        <img class="logo-img" src="../../../../assets/Holcim_logo.png">
+    </a>
+    <app-vertical-menu [menuItems]="menuItems">></app-vertical-menu>    
+</div>

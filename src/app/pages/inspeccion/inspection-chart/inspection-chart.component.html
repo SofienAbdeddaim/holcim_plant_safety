@@ -1,0 +1,23 @@
+<div class="action">
+  <div class="label">Choose a month:</div>
+  <dx-select-box id="selectbox" [items]="months" [width]="150" [value]="currentMonth" valueExpr="id" displayExpr="name" (onValueChanged)="onValueChanged($event)"></dx-select-box>
+</div>
+<div *ngIf="dataSource.length > 0">
+  <dx-chart id="chart" title="" [dataSource]="dataSource">
+    <dxi-series valueField="done" name="Done"></dxi-series>
+    <dxi-series valueField="pending" name="Pending"></dxi-series>
+    <dxi-value-axis position="right">
+      <dxo-title text="count"></dxo-title>
+    </dxi-value-axis>
+    <dxo-common-series-settings argumentField="date" type="stackedBar">
+    </dxo-common-series-settings>
+    <dxo-legend verticalAlignment="bottom" horizontalAlignment="center" itemTextPosition="top">
+    </dxo-legend>
+    <dxo-export [enabled]="true"></dxo-export>
+    <dxo-tooltip [enabled]="true" location="edge" [customizeTooltip]="customizeTooltip">
+    </dxo-tooltip>
+  </dx-chart>
+</div>
+<div *ngIf="dataSource.length === 0" class="text-center">
+  <p>Sorry Couldn't Find Any Data</p>
+</div>

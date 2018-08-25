@@ -1,0 +1,22 @@
+<div class="container">
+    <h2>Cargar Agenda</h2>
+    <br>
+    <div style="text-align: center">
+        <label class="uploader" ondragover="return false;" [class.loaded]="loaded" [style.outlineColor]="dragging ? activeColor : baseColor"
+            (dragenter)="handleDragEnter()" (dragleave)="handleDragLeave()" (drop)="handleDrop($event)">
+
+            <i class="icon icon-upload" [style.color]="dragging 
+              ? ((imageSrc.length > 0) ? overlayColor : activeColor)
+              : ((imageSrc.length > 0) ? overlayColor : baseColor)"></i>
+            <h4>Drag and Drop your CSV here</h4>
+            <input type="file" (change)="changeListener($event)" accept=".csv">
+        </label>
+        <br>
+    </div>
+    <div class="text-center" *ngIf="success">
+        <h3>Uploaded Successfully</h3>
+    </div>
+    <div class="text-center" *ngIf="fail">
+        <h3>Failed Upload. make sure your CSV in correct format</h3>
+    </div>
+</div>

@@ -1,0 +1,169 @@
+<!--<button class="col-lg-3 mb-2" (click)="onNext()">next</button>-->
+<!--<button type="button" (click)="selectedDate(d)" class="btn btn-success btn-rounded w-100p mb-1">with date</button>-->
+<div class="row">
+    <div class="form-group d-inline-block align-top col-md-3">
+        <!--<label for="datepicker">choose a date</label>-->
+        <div class="input-group">
+            <input class="form-control" placeholder="yyyy-mm-dd" id="datepicker" name="dp" [displayMonths]="displayMonths" [navigation]="navigation"
+                [(ngModel)]="modelPopup" (ngModelChange)="onDateSelect($event)" ngbDatepicker #d="ngbDatepicker">
+            <div class="input-group-append" (click)="d.toggle()">
+                <span class="input-group-text">
+                    <i class="fa fa-calendar"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group col-md-4">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Customer name" #customerData>
+            <div class="input-group-append">
+                <button class="btn btn-success" type="button">Get it</button>
+            </div>
+        </div>
+    </div>
+    <!--<button (click)="selectedDate()"></button>-->
+    <div class="col-md-4">
+        <button type="button" (click)="onNext()" class="btn btn-success btn-rounded">Next data</button>
+    </div>
+</div>
+
+<dx-data-grid id="gridContainer" [dataSource]="dataSourceEquip" keyExpr="ID" [allowColumnReordering]="true" (onEditingStart)="logEvent('EditingStart', $event)"
+    (onInitNewRow)="logEvent('InitNewRow', $event)" (onRowInserting)="logEvent('RowInserting', $event)" (onRowInserted)="addItem($event)"
+    (onRowUpdating)="logEvent('RowUpdating', $event)" (onRowUpdated)="updateItem($event)" (onRowRemoving)="logEvent('RowRemoving', $event)"
+    (onRowRemoved)="toDeleteItem($event)">
+
+    <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+    <dxo-load-panel [enabled]="true"></dxo-load-panel>
+
+
+
+    <dxi-column dataField="Actions" [width]="100" [allowFiltering]="false" [allowSorting]="false" cellTemplate="cellTemplate"></dxi-column>
+    <!-- <dxi-column dataField="DeliveryAddress" caption="Endereço"></dxi-column> -->
+    <dxi-column dataField="ProjectId" caption="Id"></dxi-column>
+    <dxi-column dataField="Project" caption="Nombre de la Obra"></dxi-column>
+    <dxi-column dataField="ContactEmail" caption="Correo de Contacto" [width]="100"></dxi-column>
+    <dxi-column dataField="ContactName" caption="Contacto de la Obra"></dxi-column>
+    <dxi-column dataField="ContactPhone" caption="Telefono de contacto"></dxi-column>
+    <dxi-column dataField="CustomerName" caption="Cliente"></dxi-column>
+    <dxi-column dataField="DeliveryDate" caption="Fecha de Despacho" dataType="date"></dxi-column>
+    <dxi-column dataField="DeliveryAddress" caption="Delivery Address"></dxi-column>
+    <dxi-column dataField="DocumentType" caption="Tipo de Documento"></dxi-column>
+    <dxi-column dataField="Status" caption="Status"></dxi-column>
+    <dxi-column dataField="SupervisorId" caption="Supervisor"></dxi-column>
+    <dxi-column dataField="TimeStamp" caption="Hora de la Inspección" dataType="datetime"></dxi-column>
+    <!--<dxi-column dataField="Actions" [allowHeaderFiltering]="false"-->
+    <!--[allowFiltering]="false" [allowSorting]="false" cellTemplate="cemplate"-->
+    <!--alignment="center" [width]="70"></dxi-column>-->
+    <!--<div *dxTemplate="let data of 'cemplate'">-->
+    <!--<i class="fas fa-cog" title="Modifier" data-toggle="tooltip" (click)="onTest(data)"></i>-->
+    <!--</div>-->
+    <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true">
+    </dxo-editing>
+
+    <dxo-paging [pageSize]="10"></dxo-paging>
+    <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true">
+    </dxo-pager>
+    <dxo-sorting mode="multiple"></dxo-sorting>
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
+    <dxo-header-filter [visible]="true"></dxo-header-filter>
+    <dxo-search-panel [visible]="true" [width]="240" placeholder="Rechercher..."></dxo-search-panel>
+    <dxo-group-panel [visible]="true"></dxo-group-panel>
+
+    <div *dxTemplate="let data of 'cellTemplate'">
+        <button class="btn btn-primary" (click)="onClick($event, data)">Download</button>
+        <button class="btn btn-primary" (click)="openModal($event, data)">View</button>
+
+    </div>
+</dx-data-grid>
+
+<br>
+<br>
+
+<div>
+    <app-inspection-chart></app-inspection-chart>
+</div>
+
+<!-- modal -->
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">More Info</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <ngb-tabset>
+            <ngb-tab title="Gallery">
+                <ng-template ngbTabContent>
+                    <ul class="list-unstyled">
+                        <li class="media" *ngFor="let image of selectedImages; let i = index">
+                            <a class="d-flex">
+                                <img [src]="image.imageurl" style="padding: 15px" height="180px" width="240px" alt="">
+                            </a>
+                            <div class="media-body">
+                                <div>
+                                    <div class="form-group">
+                                        <label for="">Description</label>
+                                        <textarea class="form-control" name="" id="" rows="3" [(ngModel)]="image.des"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Type of Element</label>
+                                        <select class="form-control" name="" id="" [(ngModel)]="image.tipoelemento">
+                                            <option value="1" selected>Recorrido Seguro</option>
+                                            <option value="2">Lugar de ubicación</option>
+                                            <option value="3">Acceso seguro</option>
+                                            <option value="4">Recorrido de tuberia</option>
+                                            <option value="5">Puntos para altura</option>
+                                            <option value="6">Ubicación para descarga</option>
+                                            <option value="7">Condiciones Inseguras</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <!-- <button type="button" class="btn btn-outline-primary" (click)="openImageEditor(imageEditor, image)">Edit</button>
+                                    <button type="button" class="btn btn-outline-primary" (click)="remove(i)">Remove</button>
+                                    <button type="button" class="btn btn-outline-primary" (click)="update(image)">Update</button> -->
+                                    <a class="btn" href="{{image.url}}" download="image" target="_blank">
+                                        Download
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </ng-template>
+            </ngb-tab>
+            <ngb-tab title="Recommandations">
+                <ng-template ngbTabContent>
+                    <ul class="list-unstyled">
+                        <li *ngFor="let item of selectedRecommendations">
+                            <div class="row">
+                                <div class="col-11">{{ item.Label }} </div>
+                                <div class="col-1">
+                                    <span class="badge badge-success" *ngIf="item.Answer === true">{{ item.Answer }}</span>
+                                </div>
+                                <div class="col-1">
+                                    <span class="badge badge-danger" *ngIf="item.Answer === false">{{ item.Answer }}</span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </ng-template>
+            </ngb-tab>
+            <ngb-tab title="Disabled">
+                <ng-template ngbTabContent>
+                    <p>Sed commodo, leo at suscipit dictum, quam est porttitor sapien, eget sodales nibh elit id diam. Nulla
+                        facilisi. Donec egestas ligula vitae odio interdum aliquet. Duis lectus turpis, luctus eget tincidunt
+                        eu, congue et odio. Duis pharetra et nisl at faucibus. Quisque luctus pulvinar arcu, et molestie
+                        lectus ultrices et. Sed diam urna, egestas ut ipsum vel, volutpat volutpat neque. Praesent fringilla
+                        tortor arcu. Vivamus faucibus nisl enim, nec tristique ipsum euismod facilisis. Morbi ut bibendum
+                        est, eu tincidunt odio. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus
+                        mus. Mauris aliquet odio ac lorem aliquet ultricies in eget neque. Phasellus nec tortor vel tellus
+                        pulvinar feugiat.</p>
+                </ng-template>
+            </ngb-tab>
+        </ngb-tabset>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="d('Cross click')">close</button>
+    </div>
+</ng-template>
