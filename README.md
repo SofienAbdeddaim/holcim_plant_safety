@@ -2,9 +2,10 @@
 #Install
 First install npm install
 
-# StartNG
+# HolcimPlantSafety
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.0.0.
+This project deploy it in firebase hosting => https://seguridad-en-planta.firebaseapp.com/
+![alt text](https://i.gyazo.com/ea1d8f55af7a039edc79a78defbb15c7.gif)
 
 ## Development server
 
